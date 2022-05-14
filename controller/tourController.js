@@ -14,7 +14,6 @@ exports.aliasTours = (req, res, next) => {
 };
 
 exports.getAlltours = catchAsync(async (req, res, next) => {
-  console.log(Tourmodel.find());
   const features = new Apifeatures(Tourmodel.find(), req.query)
     .filtering()
     .sorting()
@@ -32,7 +31,7 @@ exports.getAlltours = catchAsync(async (req, res, next) => {
     },
   });
 });
-exports.getOneTour = handlerFactory.getOne(Tourmodel, { path: 'guides' });
+exports.getOneTour = handlerFactory.getOne(Tourmodel, { path: 'reviews' });
 exports.creatToure = handlerFactory.creatOne(Tourmodel);
 exports.updateTour = handlerFactory.updateOne(Tourmodel);
 exports.deleteTour = handlerFactory.deletOne(Tourmodel);

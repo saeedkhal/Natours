@@ -131,10 +131,9 @@ const tourSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
-// tourSchema.virtual('durationWeeks').get(function () {
-//   return this.duration / 7;
-// });
-
+tourSchema.virtual('durationWeeks').get(function () {
+  return this.duration / 7;
+});
 tourSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'guides',
@@ -145,9 +144,10 @@ tourSchema.pre(/^find/, function (next) {
 
 //virsual populate
 tourSchema.virtual('reviews', {
-  ref: 'reviewModel',
-  localField: '_id',
-  foreignField: 'tour',
+  //this go to reviewModel and do this query reviews = await find({tour:_id});
+  ref: 'reviewModel', //ref to the forien field
+  localField: '_id', // Find document where `localField`
+  foreignField: 'tour', // is equal to `foreignField`
 });
 const Tourmodel = mongoose.model('tourModel', tourSchema);
 
