@@ -45,7 +45,7 @@ const tourSchema = new mongoose.Schema(
       require: [true, 'the diffculty is required '],
       //this is validator
       enum: {
-        values: ['easy', 'difficulty', 'medium'],
+        values: ['easy', 'difficult', 'medium'],
         message: 'the difficulty either to be easy or medium or difficult ',
       },
     },
@@ -96,6 +96,35 @@ const tourSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    startLocation: {
+      type: {
+        type: String,
+        default: 'Point',
+        enum: ['Point'],
+      },
+      description: String,
+      coordinates: [Number],
+      address: String,
+    },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: 'Point',
+          enum: ['Point'],
+        },
+        description: String,
+        coordinates: [Number],
+        address: String,
+        day: Number,
+      },
+    ],
+    guides: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'userModel',
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },
@@ -120,33 +149,6 @@ tourSchema.virtual('reviews', {
   localField: '_id',
   foreignField: 'tour',
 });
-/* DOCUMENT MIDDLE WARE WORK ONLY WITH .SAVE() AND .CREATE() */
-// tourSchema.pre('save', function (next) {
-//   console.log('***************');
-//   console.log(this);
-//   console.log('***************');
-//   next();
-// });
-// tourSchema.post('save', function (next) {
-//   console.log("document equal",this);
-//   next();
-// });
-/* QUERY MIDDLE WARE */
-
-// tourSchema.post(/^find/, function (docs, next) {
-//   // this.find({ secretTout: { $ne: true } });
-//   console.log(`the time token is ${new Date() - this.start}`);
-//   console.log(docs);
-//   next();
-// });
-/* AGGERATION MIDDLE WARE */
-
-// tourSchema.pre('aggregate', function (next) {
-//   console.log(this.pipline());
-//   next();
-// });
-
-// "Tour" is the name that will be stored in data base
 const Tourmodel = mongoose.model('tourModel', tourSchema);
 
 module.exports = Tourmodel;

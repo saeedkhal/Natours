@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 
 const tourModel = require('../../models/tour_model');
 
-dotenv.config({ path: './config.env' });
+dotenv.config({ path: '../../config.env' });
 
 // console.log(process.env);
 
@@ -20,10 +20,7 @@ mongoose.connect(DB, {
   useUnifiedTopology: true,
 });
 
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8')
-);
-console.log(tours);
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
 
 const importData = async () => {
   try {
@@ -32,6 +29,7 @@ const importData = async () => {
     process.exit();
   } catch (err) {
     console.log(err);
+    process.exit();
   }
 };
 const removeData = async () => {
@@ -41,7 +39,12 @@ const removeData = async () => {
     process.exit();
   } catch (err) {
     console.log(err);
+    process.exit();
   }
 };
-// importData();
-// removeData();
+if (process.argv[2] === '--import') {
+  importData();
+}
+if (process.argv[2] === '--delete') {
+  removeData();
+}

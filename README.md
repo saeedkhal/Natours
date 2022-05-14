@@ -1,1 +1,1 @@
-# Natours
+# Journy API
