@@ -93,3 +93,77 @@ exports.getMontholyPlan = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.getWithin = catchAsync(async (req, res, next) => {
+  const { raduis, lnglat, unit } = req.params;
+  const [lng, lat] = lnglat.split(',');
+  if (!lng || !lat) {
+    return next(
+      new Apperror('please enter the langtude and latiude lng,lat'),
+      400
+    );
+  }
+  if (unit !== 'mi' && unit !== 'km') {
+    return next(
+      new Apperror(
+        'non suporting unit please enter valid unit mi for mile or km for kilometer '
+      ),
+      400
+    );
+  }
+  const radDistance = unit === 'mi' ? raduis / 3963.2 : raduis / 6378.1;
+  const tourWithin = await Tourmodel.find({
+    startLocation: {
+      $geoWithin: {
+        $centerSphere: [[lng, lat], radDistance],
+      },
+    },
+  });
+  res.status(200).json({
+    status: 'success',
+    lenght: tourWithin.length,
+    tours: tourWithin,
+  });
+});
+
+exports.getDistances = catchAsync(async (req, res, next) => {
+  // /distances/center/:lnglat/unit/:unit
+  const { lnglat, unit } = req.params;
+  const [lng, lat] = lnglat.split(',');
+  if (!lng || !lat) {
+    return next(
+      new Apperror('please enter the langtude and latiude lng,lat'),
+      400
+    );
+  }
+  if (unit !== 'mi' && unit !== 'km') {
+    return next(
+      new Apperror(
+        'non suporting unit please enter valid unit mi for mile or km for kilometer '
+      ),
+      400
+    );
+  }
+  const multiplier = unit === 'mi' ? Math.pow(6.211, -4) : Math.pow(1, -3);
+  const distances = await Tourmodel.aggregate([
+    {
+      $geoNear: {
+        near: { type: 'Point', coordinates: [lng * 1, lat * 1] },
+        distanceField: 'distance',
+        spherical: true,
+        distanceMultiplier: multiplier,
+      },
+    },
+    {
+      $project: {
+        name: 1,
+        distance: 1,
+      },
+    },
+  ]);
+  res.status(200).json({
+    status: 'success',
+    lenght: distances.length,
+    tours: distances,
+  });
+});

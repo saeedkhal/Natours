@@ -44,4 +44,9 @@ router
     tourController.deleteTour
   );
 
+router.get(
+  '/tours-within/:raduis/center/:lnglat/unit/:unit',
+  tourController.getWithin
+);
+router.get('/distances/center/:lnglat/unit/:unit', tourController.getDistances);
 module.exports = router;
