@@ -31,7 +31,7 @@ if (process.env.NODE_ENV === 'development') {
 //5)middle ware not used
 
 app.use((req, res, next) => {
-  console.log(' hellow from middlewar ');
+  //console.log(' hellow from middlewar ');
   next();
 });
 //5)middleware for display time

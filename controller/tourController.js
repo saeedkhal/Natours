@@ -1,38 +1,21 @@
 /* eslint-disable prefer-object-spread */
 const Tourmodel = require('../models/tour_model');
-const Apifeatures = require('../utils/apiFeatures');
 const Apperror = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const handlerFactory = require('../controller/handlerFactory');
 /* 6) ALIASING THE FILTERING PROPERTY IN ANEW ROUTE  */
 //this will git the top 5 cheapest and hight rate in all tours
 exports.aliasTours = (req, res, next) => {
-  req.query.limit = '5';
-  req.query.page = '1';
+  console.log(req.query);
   req.query.sort = 'ratingsAverage, price';
+  req.query.page = '1';
+  req.query.limit = '5';
   next();
 };
 
-exports.getAlltours = catchAsync(async (req, res, next) => {
-  const features = new Apifeatures(Tourmodel.find(), req.query)
-    .filtering()
-    .sorting()
-    .projection()
-    .skipingAndlimiting();
-  const allToursArr = await features.mongQueryArr;
-
-  res.status(200);
-  res.json({
-    status: 'success',
-    results: allToursArr.length,
-    reqestTime: req.reqestTime,
-    data: {
-      tours: allToursArr,
-    },
-  });
-});
+exports.getAlltours = handlerFactory.getAll(Tourmodel);
 exports.getOneTour = handlerFactory.getOne(Tourmodel, { path: 'reviews' });
-exports.creatToure = handlerFactory.creatOne(Tourmodel);
+exports.creatTour = handlerFactory.creatOne(Tourmodel);
 exports.updateTour = handlerFactory.updateOne(Tourmodel);
 exports.deleteTour = handlerFactory.deletOne(Tourmodel);
 

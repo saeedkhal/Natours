@@ -53,10 +53,6 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     new: true,
     runValidators: true, //if true will ask validator for the updated field only else will ignore
   });
-  // const user = await userModel.findById(req.user.id);
-  // user.email = filteredObj.email;
-  // user.name = filteredObj.name;
-  // await user.save({ runValidators: false }); //will not ask validator
 
   res.status(200);
   res.json({
@@ -95,19 +91,10 @@ exports.creatUser = (req, res) => {
   });
 };
 
-exports.getOneUser = (req, res) => {
-  res.status(500).json({
-    status: 'fail',
-    message: 'this route is not definde',
-  });
-};
-
-// exports.updateUser = (req, res) => {
-//   res.status(500).json({
-//     status: 'fail',
-//     message: 'this route is not definde',
-//   });
-// };
-
+exports.getOneUser = handlerFactory.getOne(userModel);
 exports.deleteUser = handlerFactory.deletOne(userModel);
 exports.updateUser = handlerFactory.updateOne(userModel);
+exports.getMe = catchAsync(async (req, res, next) => {
+  req.params.id = req.user._id;
+  next();
+});

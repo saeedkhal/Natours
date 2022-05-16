@@ -1,5 +1,6 @@
 const Apperror = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const Apifeatures = require('../utils/apiFeatures');
 
 exports.deletOne = (Model) =>
   catchAsync(async (req, res, next) => {
@@ -34,8 +35,6 @@ exports.updateOne = (Model) =>
 
 exports.creatOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    // const newTour = new Tourmodel({});
-    // newTour.save();
     const createdDoc = await Model.create(req.body);
     res.status(201).json({
       status: 'success',
@@ -62,5 +61,30 @@ exports.getOne = (Model, popOptions) =>
     res.status(200).json({
       status: 'success',
       data: getDoc,
+    });
+  });
+
+exports.getAll = (Model) =>
+  catchAsync(async (req, res, next) => {
+    //filter fot the review
+    let filter = {};
+    if (req.params.tourid) {
+      filter = { tour: req.params.tourid };
+    }
+    const features = new Apifeatures(Model.find(filter), req.query)
+      .filtering()
+      .sorting()
+      .projection()
+      .skipingAndlimiting();
+    const doc = await features.mongQueryArr;
+
+    res.status(200);
+    res.json({
+      status: 'success',
+      results: doc.length,
+      reqestTime: req.reqestTime,
+      data: {
+        data: doc,
+      },
     });
   });

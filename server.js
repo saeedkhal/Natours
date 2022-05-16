@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-
+const colors = require('colors');
 process.on('uncaughtException', (err) => {
   console.log(err.name, err.message);
   //end server working requist
@@ -17,7 +17,6 @@ const DB = process.env.DATABASE.replace(
   '<DATABASE_PASSWORD>',
   process.env.DATABASE_PASSWORD
 );
-console.log('saeed');
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
@@ -26,12 +25,12 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log('dbconnected successfuly');
+    console.log('dbconnected successfuly'.yellow.bold);
   });
 
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
-  console.log('your app has been created');
+  console.log('your app has been created'.brightBlue.bold);
 });
 //unhandledRejection error
 process.on('unhandledRejection', (err) => {

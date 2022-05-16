@@ -10,23 +10,22 @@ router.post('/signUp', authController.signUp);
 router.post('/logIn', authController.logIn);
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:resetToken', authController.resetPassword);
+//all router after that route will be protected
+router.use(authController.protect);
+
 router
   .route('/updatePassword')
   .patch(authController.protect, authController.updatePassword);
 
-//user routers
+router.patch('/updateMe', userController.uploadPhoto, userController.updateMe);
+router.get('/getMe', userController.getMe, userController.getOneUser);
+router.delete('/deleteMe', userController.deleteMe);
+router.use(authController.restrictTo('admin'));
+
 router
   .route('/')
   .get(userController.getAllusers)
   .post(userController.creatUser);
-
-router.patch(
-  '/updateMe',
-  authController.protect,
-  userController.uploadPhoto,
-  userController.updateMe
-);
-router.delete('/deleteMe', authController.protect, userController.deleteMe);
 router
   .route('/:id')
   .get(userController.getOneUser)

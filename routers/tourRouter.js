@@ -11,12 +11,12 @@ router.use('/:tourid/reviews', reviewRouter);
 // router.param('tourid', tourController.checkId);
 router
   .route('/')
-  .get(authenticationController.protect, tourController.getAlltours)
-  .post(tourController.creatToure);
-// .post(tourController.checkBody, tourController.creatToure);
-
-// router.route('/gettourstats').get(tourController.getTourStats);
-
+  .get(tourController.getAlltours)
+  .post(
+    authenticationController.protect,
+    authenticationController.restrictTo('admin', 'lead-guide'),
+    tourController.creatTour
+  );
 router
   .route('/Top-5-cheep')
   .get(tourController.aliasTours, tourController.getAlltours);
@@ -44,11 +44,4 @@ router
     tourController.deleteTour
   );
 
-// router
-//   .route('/:tourid/reviews')
-//   .post(
-//     authenticationController.protect,
-//     authenticationController.restrictTo('user'),
-//     reviewController.creatReview
-//   );
 module.exports = router;
