@@ -19,6 +19,7 @@ const tourSchema = new mongoose.Schema(
       //custom validation can be writen with another way
       validate: {
         validator: function (val) {
+          // this work only on .Save or create not work  in update
           /* "this" point refer to the created object only not on the update one  */
           //we can use alibrary called validator
           return val < this.price;
@@ -56,6 +57,7 @@ const tourSchema = new mongoose.Schema(
       //this is validator
       min: [1.0, 'the minimum num must be 1.0 '],
       max: [5.0, 'the maximum num must be 5.0 '],
+      set: (val) => val.toFixed(1),
     },
     guides: [
       {
@@ -131,6 +133,8 @@ const tourSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+tourSchema.index({ price: 1, ratingsAverage: -1 });
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
 });
@@ -140,6 +144,13 @@ tourSchema.pre(/^find/, function (next) {
     select: '-__v',
   });
   next();
+});
+tourSchema.post(/^find/, function (doc) {
+  // this refer to the query and doc refer to the doc
+  // this.populate({
+  //   path: 'guides',
+  //   select: '-__v',
+  // });
 });
 
 //virsual populate

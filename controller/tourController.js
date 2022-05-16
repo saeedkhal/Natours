@@ -1,5 +1,5 @@
 /* eslint-disable prefer-object-spread */
-const Tourmodel = require('../models/tour_model');
+const Tourmodel = require('../models/tourModel');
 const Apperror = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const handlerFactory = require('../controller/handlerFactory');

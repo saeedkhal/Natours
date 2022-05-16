@@ -76,7 +76,7 @@ exports.getAll = (Model) =>
       .sorting()
       .projection()
       .skipingAndlimiting();
-    const doc = await features.mongQueryArr;
+    const doc = await features.mongQueryArr.explain();
 
     res.status(200);
     res.json({
